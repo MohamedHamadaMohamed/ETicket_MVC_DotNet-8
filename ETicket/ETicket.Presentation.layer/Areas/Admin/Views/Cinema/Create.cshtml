@@ -1,0 +1,35 @@
+﻿@model Cinema
+
+<div class="row mt-2">
+    <h1><a href="/Admin/Cinema/Index"><i class="bi bi-arrow-left"></i> </a>  Create New Cinema</h1>
+</div>
+<div class="row">
+    <form action="/Admin/Cinema/Create" method="post">
+        <div class="mb-3">
+            <label for="CinemaName" class="form-label">Cinema Name</label>
+            <input type="text" class="form-control" value="@Model.Name" id="CinemaName" name="Name" placeholder="Cinema Name">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.Name"></span>
+
+        <div class="mb-3">
+            <label for="CinemaDescription" class="form-label">Cinema Description</label>
+            <input type="text" class="form-control" value="@Model.Description" id="CinemaDescription" name="Description" placeholder="Cinema Description">
+        </div>
+
+        <div class="mb-3">
+            <label for="CinemaLogo" class="form-label">Cinema Logo</label>
+            <input type="text" class="form-control" value="@Model.CinemaLogo" id="CinemaLogo" name="CinemaLogo" placeholder="Cinema Logo">
+        </div>
+
+        <div class="mb-3">
+            <label for="CinemaAddress" class="form-label">Cinema Address</label>
+            <input type="text" class="form-control" value="@Model.Address" id="CinemaAddress" name="Address" placeholder="Cinema Address">
+        </div>
+
+
+        <br />
+        <button type="submit" class="btn btn-primary ">Create</button>
+
+    </form>
+
+</div>

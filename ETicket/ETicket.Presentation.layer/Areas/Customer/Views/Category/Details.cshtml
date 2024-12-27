@@ -1,0 +1,60 @@
+﻿
+@model List<Movie>
+
+<br />
+<div class="row ">
+    @foreach (var item in Model)
+    {
+        <div class="col-6">
+            <table>
+                <tr>
+                    <h3 style="text-align:center">@item.Name</h3>
+                </tr>
+                <tr>
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="~/Files/Images/movies/@item.ImgUrl" class="img-fluid rounded-start" alt="@item.ImgUrl" style="margin-bottom:20%">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <!-- <h5 class="card-title">Card title</h5> -->
+                                    <p class="card-text">price : <span class="badge bg-info">@item.Price</span></p>
+                                    <p class="card-text">Cinema: @item.Cinema.Name</p>
+                                    <p class="card-text">Start Date: @item.StartDate</p>
+                                    <p class="card-text">End Date: @item.EndDate</p>
+                                    <p class="card-text">Category: <a href="" style="color:blue">@item.Category.Name</a></p>
+                                    @if (item.MovieStatus == MovieStatus.Available)
+                                    {
+                                        <p class="card-text"><span class="badge bg-primary">@item.MovieStatus</span></p>
+                                    }
+                                    else if (item.MovieStatus == MovieStatus.Expired)
+                                    {
+                                        <p class="card-text"><span class="badge bg-danger">@item.MovieStatus</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text"><span class="badge bg-warning">@item.MovieStatus</span></p>
+                                    }
+                                    <a href="/Customer/Movie/Details?movieId=@item.Id" class="btn btn-secondary">More Details</a>
+
+                                    @if (item.MovieStatus == MovieStatus.Available)
+                                    {
+                                        <a class="btn btn-outline-success">Book Ticket</a>
+                                    }
+                                    else
+                                    {
+                                        <button disabled class="btn btn-outline-success" style=" color:black ;background-color: slategray">Book Ticket</button>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            </table>
+        </div>
+
+    }
+</div>

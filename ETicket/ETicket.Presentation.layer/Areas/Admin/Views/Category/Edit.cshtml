@@ -1,0 +1,12 @@
+﻿@model Category
+
+<div class="row mt-2">
+    <h1><a href="/Admin/Category/Index"><i class="bi bi-arrow-left"></i> </a>  Edit Category @Model.Name</h1>
+</div>
+<div class="row">
+    <form action="/Admin/Category/Edit" method="post">
+        <partial name="PartialViews/_InputCategoryPartial" model="Model" />
+
+    </form>
+
+</div>

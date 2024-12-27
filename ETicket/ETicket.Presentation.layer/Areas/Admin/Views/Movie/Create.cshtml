@@ -1,0 +1,132 @@
+﻿@model Movie
+<div class="row mt-2">
+    <h1><a href="/Admin/Movie/Index"><i class="bi bi-arrow-left"></i> </a>  Create New Movie</h1>
+</div>
+<div class="row">
+    <form action="/Admin/Movie/Create" method="post" enctype="multipart/form-data">
+       
+        <div class="mb-3">
+            <label for="MovieName" class="form-label">Movie Name</label>
+            <input type="text" class="form-control" value="@Model.Name" id="CategoryName" name="Name" placeholder="Movie Name">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.Name"></span>
+        
+        <div class="mb-3">
+            <label for="MovieDescription" class="form-label">Movie Description</label>
+            <input type="text" class="form-control" value="@Model.Description" id="MovieDescription" name="Description" placeholder="Movie Description">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.Description"></span>
+        
+        <div class="mb-3">
+            <label for="MoviePrice" class="form-label">Movie Price</label>
+            <input type="number" class="form-control"  id="MoviePrice" name="Price" placeholder="Movie Price">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.Price"></span>
+
+        
+
+        <div class="mb-3">
+            <label for="MovieImgUrl" class="form-label">Movie Image</label>
+            <input type="file" accept="images/*" class="form-control" name="file" id="MovieImgUrl" placeholder="Movie Image" onchange="previewImage(event)">
+        </div>
+        <div class="mb-3">
+            <img id="preview" src="#" alt="Image Preview" style="display:none; max-width: 300px; max-height: 300px;">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.ImgUrl"></span>
+
+
+        <div class="mb-3">
+            <label for="MovieTrailerUrl" class="form-label">Movie TrailerUrl</label>
+            <input type="text" class="form-control" id="MovieTrailerUrl" name="TrailerUrl" placeholder="Movie TrailerUrl">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.TrailerUrl"></span>
+        
+        <div class="mb-3">
+            <label for="MovieStartDate" class="form-label">Movie Start Date</label>
+            <input type="datetime-local" class="form-control" id="MovieStartDate" name="StartDate" placeholder="Movie Start Date">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.StartDate"></span>
+
+        <div class="mb-3">
+            <label for="MovieEndDate" class="form-label">Movie End Date</label>
+            <input type="datetime-local" class="form-control" id="MovieEndDate" name="EndDate" placeholder="Movie End Date">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.EndDate"></span>
+
+        <div class="mb-3">
+            <label for="MovieStatus" class="form-label">Movie Status</label>
+            <select class="form-select " aria-label="Default select example" name="MovieStatus">
+                <option selected>Open this select menu</option>
+                <option value="@MovieStatus.Upcoming">@MovieStatus.Upcoming</option>
+                <option value="@MovieStatus.Upcoming">@MovieStatus.Available</option>
+                <option value="@MovieStatus.Upcoming">@MovieStatus.Expired</option>
+
+            </select>
+        </div>
+
+
+
+        <div class="mb-3">
+            <label for="MovieCinemaId" class="form-label">Movie Cinema</label>
+            <select class="form-select " aria-label="Default select example" name="CinemaId">
+                <option selected>Open this select menu</option>
+                @foreach (var item in (List<Cinema>)ViewBag.cinemas)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="MovieCategoryID" class="form-label">Movie Type</label>
+            <select class="form-select " aria-label="Default select example" name="CategoryId">
+                <option selected>Open this select menu</option>
+                @foreach (var item in (List<Category>)ViewBag.categories)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </select>
+        </div>
+
+
+        <div class="form-check">
+            <label for="Actors" class="form-label" style="font-size:150%">Choise Movie Actors</label>
+            <div class="row">
+                @foreach (var item in (List<Actor>)ViewBag.actors)
+                {
+                    <div class="col-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="@item.Id" name="ActorsId" id="flexCheckDefault@item.Id">
+                            <label class="form-check-label" for="flexCheckDefault@item.Id">
+                                @item.FirstName @item.LastName
+                            </label>
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+        </div>
+
+       
+
+        
+        <br />
+        <button type="submit" class="btn btn-primary ">Create</button>
+
+    </form>
+
+</div>
+
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

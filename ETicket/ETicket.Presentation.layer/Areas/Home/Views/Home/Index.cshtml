@@ -1,0 +1,113 @@
+﻿@using ETicket.Data.Acess.layer.Models;
+@using ETicket.Data.Acess.layer.Models.Enums;
+@using ETicket.Presentation.layer.Areas.Home.Models.ViewModels;
+@model MoviesVM
+
+<br />
+<form>
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="query" id="exampleInputEmail1" placeholder="Search for Movie">
+            </div>
+        </div>
+
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+
+        </div>
+    </div>
+</form>
+<div class="row ">
+    @foreach (var item in Model.movies)
+    {
+        <div class="col-6">
+            <table>
+                <tr>
+                    <h3 style="text-align:center">@item.Name</h3>
+                </tr>
+                <tr>
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="~/Files/Images/movies/@item.ImgUrl" class="img-fluid rounded-start" alt="@item.ImgUrl" style="margin-bottom:20%">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <!-- <h5 class="card-title">Card title</h5> -->
+                                    <p class="card-text">price : <span class="badge bg-info">@item.Price $ </span></p>
+                                    <p class="card-text">Cinema: @item.Cinema.Name</p>
+                                    <p class="card-text">Start Date: @item.StartDate</p>
+                                    <p class="card-text">End Date: @item.EndDate</p>
+                                    <p class="card-text">Category: <a href="/Admin/Category/Details?CategoryId=@item.CategoryId" style="color:blue">@item.Category.Name</a></p>
+                                    @if (item.MovieStatus == MovieStatus.Available)
+                                    {
+                                        <p class="card-text"><span class="badge bg-primary">@item.MovieStatus</span></p>
+                                    }
+                                    else if (item.MovieStatus == MovieStatus.Expired)
+                                    {
+                                        <p class="card-text"><span class="badge bg-danger">@item.MovieStatus</span></p>
+                                    }
+                                    else
+                                    {
+                                        <p class="card-text"><span class="badge bg-warning">@item.MovieStatus</span></p>
+                                    }
+                                    <a href="/Admin/Movie/Details?movieId=@item.Id" class="btn btn-secondary">More Details</a>
+                                    @if (item.MovieStatus == MovieStatus.Available)
+                                    {
+                                        <a class="btn btn-success">Book Ticket</a>
+                                    }
+                                    else
+                                    {
+                                        <button disabled class="btn btn-dark disabled" style=" color:black ;background-color: slategray">Book Ticket</button>
+
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            </table>
+        </div>
+
+    }
+
+</div>
+
+<div class="d-flex flex-row-reverse">
+    
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                @for(int i =1;i<=Model.TotalMovieCount;i++)
+                {
+                    @if(Model.CurrentPageIndex == i)
+                    {
+                        <li class="page-item"><a class="page-link active" href="/Home/Home/Index?PageNumber=@i">@i</a></li>
+
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link " href="/Home/Home/Index?PageNumber=@i">@i</a></li>
+                    }
+                }
+                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+        </nav>
+
+
+</div>
+
+
+
+
+@section Scripts
+{
+    @if (@TempData["Success"] != null)
+    {
+        <script>
+            toastr.sucess('@TempData["Success"]')
+        </script>
+    }
+}

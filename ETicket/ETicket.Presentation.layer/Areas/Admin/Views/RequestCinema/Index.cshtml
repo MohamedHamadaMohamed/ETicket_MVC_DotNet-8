@@ -1,0 +1,78 @@
+﻿@model IEnumerable<RequestCinema>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cinema Request Menu</h1>
+
+<p>
+    <a asp-action="CreateNewRequest" asp-controller="RequestCinema" asp-area="Admin">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CinemaLogo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Details)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CinemaLogo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Details)
+            </td>
+            <td>
+                    <a href="/RequestCinema/Accept?RequestId=@item.Id" class="btn btn-warning" id="@item.Id">pending</a>
+                    <script>
+                        document.getElementById(@item.Id).addEventListener('click', function () {
+                            this.style.backgroundColor = 'green';
+                            this.style.color = 'yellow';
+                            this.textContent = 'accept';
+                            this.disabled = true;
+                        });
+                    </script>
+                    <a href="/RequestCinema/Reject?RequestId=@item.Id" class="btn btn-danger">reject</a>
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts
+{
+    
+}

@@ -1,0 +1,92 @@
+﻿@using ETicket.Presentation.layer.Areas.Admin.Models.ViewModels
+
+@model ActorsVM
+<br />
+<form>
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="query" id="exampleInputEmail1" placeholder="Search for Actor">
+            </div>
+        </div>
+
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-10">
+        <h1>All Actors</h1>
+    </div>
+    <div class="col-2">
+        <a href="/Admin/Actor/Create" class="btn btn-secondary"><i class="bi bi-plus-circle"></i> Add New Actor</a>
+    </div>
+</div>
+<br />
+
+
+<table class="table" style="border:solid">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col" style="text-align:center">ID</th>
+            <th scope="col" style="text-align:center">Name</th>
+            <th scope="col" style="text-align:center">Bio</th>
+            <th scope="col" style="text-align:center">ProfilePicture</th>
+            <th scope="col" style="text-align:center">News</th>
+            <th scope="col" style="text-align:center">Actions</th>
+ 
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.actors)
+        {
+            <tr style="border:solid">
+                <th scope="row" style="border:solid">@item.Id</th>
+                <th scope="row" style="border:solid">@item.FirstName @item.LastName</th>
+                <th scope="row" style="border:solid">@item.Bio</th>
+                <th scope="row" style="border:solid;text-align:center"> <img src="~/Files/Images/cast/@item.ProfilePicture" alt="Alternate Text" /> </th>
+                <th scope="row" style="border:solid">@item.News</th>
+                
+                <td>
+                    <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                        <button type="button" class="btn btn-primary">Action</button>
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <a class="dropdown-item" href="/Admin/Actor/Edit?ActorId=@item.Id">Edit</a>
+                                <a class="dropdown-item" href="/Admin/Actor/Delete?ActorId=@item.Id" onclick="return confirm('are you sure?')">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex flex-row-reverse">
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            @for (int i = 1; i <= Model.TotalActorCount; i++)
+            {
+                @if (Model.CurrentPageIndex == i)
+                {
+                    <li class="page-item"><a class="page-link active" href="/Admin/Actor/Index?PageNumber=@i">@i</a></li>
+
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link " href="/Admin/Actor/Index?PageNumber=@i">@i</a></li>
+                }
+            }
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+
+</div>

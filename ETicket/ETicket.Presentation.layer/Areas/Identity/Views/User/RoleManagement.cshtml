@@ -1,0 +1,48 @@
+﻿@using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels;
+@model UserRoleVM
+@{
+	ViewData["Title"] = "Role Management";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br/>
+<div class="row">
+	<h1>EDIT ROLE : @Model.User.UserName</h1>
+	<hr/>
+</div>
+
+	<div class="form-group">
+	<label asp-for="@Model.User.Email" class="control-label">Email</label>
+	<input asp-for="@Model.User.Email" disabled name="email" value="@Model.User.Email" class="form-control" />
+	</div>
+
+	<div class="form-group">
+	<label asp-for="@Model.User.FirstName" class="control-label">Name</label>
+	<input asp-for="@Model.User.FirstName" disabled name="Name" value="@Model.User.FirstName @Model.User.LastName" class="form-control" />
+	</div>
+	<br />
+	<form asp-action="RoleManagement" class="mt-3" method="post">
+		<div class="form-group">
+		<input asp-for="@Model.User.Id" type="hidden" name="UserId" value="@Model.User.Id" class="form-control" />
+		</div>
+		<div class="form-group">
+			<select class="form-select" name="RoleId" aria-label="Default select example">
+				<option selected>Roles</option>
+				@foreach (var role in Model.Roles)
+				{
+					<option value="@role.Id">@role.Name</option>
+				}
+			</select>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-6">
+			<input class="btn btn-light" type="submit" value="Update" style="width:100%">
+			</div>
+		</form>
+			<div class="col-6">
+				<a href="/Identity/User/Index" class="btn btn-dark" style="width:100%">Back to List</a>
+			</div>
+		</div>
+
+
+

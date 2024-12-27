@@ -1,0 +1,10 @@
+﻿@model Category
+<div class="row mt-2">
+    <h1><a href="/Admin/Category/Index"><i class="bi bi-arrow-left"></i> </a>  Create New Category</h1>
+</div>
+<div class="row">
+    <form action="/Admin/Category/Create" method="post">
+        <partial name="PartialViews/_InputCategoryPartial" model="Model" />
+    </form>
+
+</div>

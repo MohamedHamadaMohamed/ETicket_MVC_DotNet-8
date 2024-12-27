@@ -1,0 +1,63 @@
+﻿
+@model Movie
+<br/>
+<table>
+    <tr>
+        <h1>@Model.Name</h1>
+    </tr>
+    <tr>
+        <div class="row">
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="~/Files/Images/movies/@Model.ImgUrl" class="img-fluid rounded-start" alt="@Model.ImgUrl">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+
+                            <p class="card-text">@Model.Description</p>
+                            <p class="card-text">price : <span class="badge bg-info">@Model.Price</span></p>
+                            <p class="card-text">Cinema: @Model.Cinema.Name</p>
+                            <p class="card-text">Start Date: @Model.StartDate</p>
+                            <p class="card-text">End Date: @Model.EndDate</p>
+                            <p class="card-text">Views: @Model.views</p>
+                            <p class="card-text">Category: <a href="/Admin/Category/Details?CategoryId=@Model.CategoryId" style="color:blue">@Model.Category.Name</a></p>
+                            
+                            @foreach (var item in ViewBag.actors)
+                            {
+                                <a href="/Admin/Actor/Details?ActorId=@item.Id"> <img src="~/Files/Images/cast/@item.ProfilePicture" alt="Alternate Text" /> </a>
+                            }
+                            <br/>
+                            <br />
+                            @if (Model.MovieStatus == MovieStatus.Available)
+                            {
+                                
+                                <form action="/Admin/Cart/AddToCart" class="d-flex" method="post">
+
+                                    <input type="number" name="Count" placeholder="Count"  />
+                                    <input type="hidden" name="MovieId" value="@Model.Id" />
+                                    <button type="submit" class="btn btn-success">Book Ticket</button>
+
+                                </form>
+                                
+                            }
+                            else
+                            {
+                                <button disabled class="btn btn-dark disabled" style=" color:black ;background-color: slategray">Book Ticket</button>
+
+                            }
+                            <br/>
+
+                            <div class="video-container">
+                                <iframe width="300"  src="@Model.TrailerUrl" ></iframe>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </tr>
+</table>
+

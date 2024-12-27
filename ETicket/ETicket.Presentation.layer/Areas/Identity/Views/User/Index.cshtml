@@ -1,0 +1,106 @@
+﻿@using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels;
+
+@model ApplicationUsersVM
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>All Users </h1>
+
+<form>
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="query" id="exampleInputEmail1" placeholder="Search for User">
+            </div>
+        </div>
+
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+
+        </div>
+    </div>
+</form>
+
+<table class="table table-striped ">
+    <thead>
+        <tr>
+            <th scope="col" class="border border-dark">Id</th>
+            <th scope="col" class="border border-dark">First Name</th>
+            <th scope="col" class="border border-dark">Last Name</th>
+            <th scope="col" class="border border-dark">Email</th>
+			<th scope="col" class="border border-dark">User Name</th>
+            @*<th scope="col" class="border border-dark">Date Of Birth</th>*@
+            @*<th scope="col" class="border border-dark">Gender</th>*@
+			<th scope="col" class="border border-dark">Phone</th>
+			@*<th scope="col" class="border border-dark">State</th>
+			<th scope="col" class="border border-dark">City</th>
+			<th scope="col" class="border border-dark">Region</th>
+			<th scope="col" class="border border-dark">Street</th>*@
+			<th scope="col" class="border border-dark">Profile Picture</th>
+            @*<th scope="col" class="border border-dark">Is Agree</th>*@
+			<th scope="col" class="border border-dark">Lockout End</th>
+			<th scope="col" class="border border-dark">Lockout Enabled</th>
+            @*<th scope="col" class="border border-dark">Access Failed Count </th>*@
+			<th scope="col" class="border border-dark">Role</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.users)
+        {
+            <tr>
+                <th scope="row" class="border border-dark">@item.Id</th>
+                <th scope="row" class="border border-dark">@item.FirstName</th>
+                <th scope="row" class="border border-dark">@item.LastName</th>
+                <th scope="row" class="border border-dark">@item.Email</th>
+                <th scope="row" class="border border-dark">@item.UserName</th>
+                @*<th scope="row" class="border border-dark">@item.DateOfBirth</th>*@
+                @*<th scope="row" class="border border-dark">@item.Gender</th>*@
+                <th scope="row" class="border border-dark">@item.Phone</th>
+				@*<th scope="row" class="border border-dark">@item.State</th>
+                <th scope="row" class="border border-dark">@item.City</th>
+				<th scope="row" class="border border-dark">@item.Region</th>
+				<th scope="row" class="border border-dark">@item.Street</th>*@
+                <th scope="row" class="border border-dark">
+                    <img src="~/Files/Images/profiles/@item.ProfilePicture" width="50px"/>
+                </th>
+                @* <th scope="row" class="border border-dark">@item.IsAgree</th>*@
+                <th scope="row" class="border border-dark">@item.LockoutEnd</th>
+                <th scope="row" class="border border-dark">@item.LockoutEnabled</th>
+                @*<th scope="row" class="border border-dark">@item.AccessFailedCount</th>*@
+                <th scope="row" class="border border-dark">
+                <a href="/Identity/User/RoleManagement?UserId=@item.Id" class="btn btn-primary " style="width:130px">Manage Role</a> 
+
+                </th>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div class="d-flex flex-row-reverse">
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            @for (int i = 1; i <= Model.TotalUserCount; i++)
+            {
+                @if (Model.CurrentPageIndex == i)
+                {
+                    <li class="page-item"><a class="page-link active" href="/Identity/User/Index?PageNumber=@i">@i</a></li>
+
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link " href="/Identity/User/Index?PageNumber=@i">@i</a></li>
+                }
+            }
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+
+</div>

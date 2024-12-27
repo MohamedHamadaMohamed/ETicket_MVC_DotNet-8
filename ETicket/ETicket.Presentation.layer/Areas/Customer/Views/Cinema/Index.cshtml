@@ -1,0 +1,42 @@
+﻿@using ETicket.Data.Acess.layer.Models
+@model List<Cinema>
+<br />
+
+<div class="row">
+    <div class="col-10">
+        <h1>All Cinemas</h1>
+    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <div class="col-2">
+            <a href="/Idmin/Cinema/Create" class="btn btn-light"><i class="bi bi-plus-circle"></i> Add New Cinema</a>
+        </div>
+    }
+</div>
+<br />
+<table class="table" style="border:solid; text-align:center">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col" style="text-align:center">ID</th>
+            <th scope="col" style="text-align:center">Name</th>
+            <th scope="col" style="text-align:center">Description</th>
+            <th scope="col" style="text-align:center">Address</th>
+            <th scope="col" style="text-align:center">Movies</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr style="border:solid">
+                <td scope="row" style="border:solid">@item.Id</td>
+                <td scope="row" style="border:solid">@item.Name</td>
+                <td scope="row" style="border:solid" width="30%">@item.Description</td>
+
+                <td scope="row" style="border:solid">@item.Address</td>
+                <td scope="row" style="border:solid"><a href="/Customer/Cinema/Details?CinemaId=@item.Id">All Movies</a></td>
+                
+            </tr>
+        }
+    </tbody>
+</table>

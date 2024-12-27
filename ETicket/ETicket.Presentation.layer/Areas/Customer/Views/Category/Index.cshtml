@@ -1,0 +1,38 @@
+﻿@model List<Category>
+
+<br />
+
+<div class="row">
+    <div class="col-10">
+        <h1>All Cateories</h1>
+    </div>
+   
+</div>
+<br />
+
+
+<table class="table" style="border:solid; text-align:center">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col" style="text-align:center">ID</th>
+            <th scope="col" style="text-align:center">Name</th>
+            <th scope="col" style="text-align:center">Movies</th>
+            <th scope="col" style="text-align:center">Number Of Movies</th>
+           
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr style="border:solid">
+                <th scope="row" style="border:solid">@item.Id</th>
+                <th scope="row" style="border:solid">@item.Name</th>
+                <th scope="row" style="border:solid"><a href="/Customer/Category/Details?CategoryId=@item.Id">All Movies</a></th>
+                <th scope="row" style="border:solid">@item.Movies.Count()</th>
+               
+
+            </tr>
+        }
+    </tbody>
+</table>

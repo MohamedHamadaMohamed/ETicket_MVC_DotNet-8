@@ -1,0 +1,68 @@
+﻿@model Actor
+<div class="row mt-2">
+    <h1><a href="/Admin/Actor/Index"><i class="bi bi-arrow-left"></i> </a>  Edit Actor : @Model.FirstName @Model.LastName</h1>
+</div>
+<div class="row">
+    <form action="/Admin/Actor/Edit" method="post" enctype="multipart/form-data">
+
+        <div class="mb-3">
+            <label for="FirstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" value="@Model.FirstName" id="FirstName" name="FirstName" placeholder="First Name">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.FirstName"></span>
+        <div class="mb-3">
+            <label for="LastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" value="@Model.LastName" id="LastName" name="LastName" placeholder="Last Name">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.LastName"></span>
+
+        <div class="mb-3">
+            <label for="Bio" class="form-label">Bio</label>
+            <input type="text" class="form-control" value="@Model.Bio" id="Bio" name="Bio" placeholder="Bio">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.Bio"></span>
+        
+        
+       
+        <div class="mb-3">
+            <label for="ProfilePicture" class="form-label">Profile Picture</label>
+            <input type="file" accept="image/*" class="form-control" name="file" id="ProfilePicture" placeholder="ProfilePicture" onchange="previewImage(event)">
+        </div>
+        <div class="mb-3">
+            <img id="preview" src="~/Files/Images/cast/@Model.ProfilePicture" alt="Image Preview" style=" max-width: 300px; max-height: 300px;">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.ProfilePicture"></span>
+
+        
+        
+        <div class="mb-3">
+            <label for="News" class="form-label">News</label>
+            <input type="text" class="form-control" value="@Model.News" id="News" name="News" placeholder="News">
+        </div>
+        <span class="text-danger" asp-validation-for="@Model.News"></span>
+
+        <div class="mb-3">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        </div>
+
+
+        <br />
+        <button type="submit" class="btn btn-primary ">Save</button>
+
+    </form>
+
+</div>
+
+
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

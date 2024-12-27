@@ -1,0 +1,10 @@
+﻿@model Category
+
+<div class="mb-3">
+    <label for="name" class="form-label">Category Name</label>
+    <input type="text" class="form-control" id="name" value="@Model.Name" name="Name" placeholder="Category Name">
+    <input type="hidden" name="Id" value="@Model.Id" />
+</div>
+<span class="text-danger" asp-validation-for="@Model.Name"></span>
+<br />
+<button type="submit" class="btn btn-primary">Save</button>

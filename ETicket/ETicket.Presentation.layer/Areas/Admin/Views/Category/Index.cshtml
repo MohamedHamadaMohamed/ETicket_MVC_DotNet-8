@@ -1,0 +1,87 @@
+﻿@using ETicket.Presentation.layer.Areas.Admin.Models.ViewModels
+@model CategoriesVM
+
+<br />
+
+
+
+
+<div class="row">
+    <div class="col-10">
+        <h1>All Cateories</h1>
+    </div>
+
+    
+    <div class="col-2">
+        <a href="/Admin/Category/Create" class="btn btn-light"><i class="bi bi-plus-circle"></i> Add New Category</a>
+    </div>
+            
+</div>
+<br />
+
+<form>
+    <div class="row">
+        <div class="col-4">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="query" id="exampleInputEmail1" placeholder="Search for category">
+            </div>
+        </div>
+
+        <div class="col-4">
+            <button type="submit" class="btn btn-primary">Search</button>
+
+        </div>
+    </div>
+</form>
+<table class="table" style="border:solid; text-align:center">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col" style="text-align:center">ID</th>
+            <th scope="col" style="text-align:center">Name</th>
+            <th scope="col" style="text-align:center">Movies</th>
+            <th scope="col" style="text-align:center">Number Of Movies</th>
+            
+            <th scope="col" style="text-align:center">Actions</th>
+            
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Categories)
+        {
+            <tr style="border:solid">
+                <th scope="row" style="border:solid">@item.Id</th>
+                <th scope="row" style="border:solid">@item.Name</th>
+                <th scope="row" style="border:solid"><a href="/Category/SCategory?CategoryId=@item.Id">All Movies</a></th>
+                <th scope="row" style="border:solid">@item.Movies.Count()</th>
+                <td><a href="/Admin/Category/Edit?CategoryId=@item.Id" class="btn btn-primary "><i class="bi bi-pencil-square"></i> Edit</a> <a href="/Admin/Category/Delete?CategoryId=@item.Id" onclick="return confirm('are you sure?')" class="btn btn-primary "><i class="bi bi-trash"></i> Delete</a></td>
+                
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex flex-row-reverse">
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            @for (int i = 1; i <= Model.TotalCategoryCount; i++)
+            {
+                @if (Model.CurrentPageIndex == i)
+                {
+                    <li class="page-item"><a class="page-link active" href="/Admin/Category/Index?PageNumber=@i">@i</a></li>
+
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link " href="/Admin/Category/Index?PageNumber=@i">@i</a></li>
+                }
+            }
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>
+
+
+</div>

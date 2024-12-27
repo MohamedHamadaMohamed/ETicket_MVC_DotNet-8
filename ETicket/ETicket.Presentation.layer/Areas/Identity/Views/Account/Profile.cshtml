@@ -1,0 +1,133 @@
+﻿@using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels;
+@using ETicket.Data.Acess.layer.Models.Enums;
+
+@model ProfileVM
+@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<br/>
+<br />
+<br />
+
+
+<div class="card mb-6 " style="max-width: 100%;">
+    <form action="Profile" enctype="multipart/form-data" method="post">
+        <input type="hidden" value="@Model.Id" name="Id"/>
+		<div class="row g-0">
+    
+        <div class="col-md-8">
+          <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="FirstName" class="form-label">First Name</label>
+                                <input type="text" name="FirstName" value="@Model.FirstName" class="form-control" id="FirstName" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="LastName" class="form-label">Last Name</label>
+                                <input type="text" name="LastName" value="@Model.LastName" class="form-control" id="LastName" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Email" class="form-label">Email</label>
+                        <input type="text" name="Email" disabled value="@Model.Email" class="form-control" id="FirstName" aria-describedby="emailHelp">
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="DateOfBirth" class="form-label">Date Of Birth</label>
+                                <input type="datetime-local" name="DateOfBirth" value="@Model.DateOfBirth" class="form-control" id="DateOfBirth" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="Gender" class="form-label">Gender</label>                            
+                                <select class="form-select"  name="Gender" aria-label="Default select example">
+                                    
+                                    <option value="@Gender.male">Male</option>
+                                    <option value="@Gender.female">Female</option>
+                                    
+                                </select>
+                            
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="State" class="form-label">State</label>
+                                <input type="text" value="@Model.State" class="form-control" id="State" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="City" class="form-label">City</label>
+                                <input type="text" value="@Model.City" class="form-control" id="City" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="Region" class="form-label">Region</label>
+                                <input type="text" value="@Model.Region" class="form-control" id="Region" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="Street" class="form-label">Street</label>
+                                <input type="text" value="@Model.Street" class="form-control" id="Street" aria-describedby="emailHelp">
+                            </div>
+                        </div>
+                    </div>
+
+          </div>
+        </div>
+        <div class="col-md-4">
+                <div class="mb-3">
+                    <img id="preview" src="~/Files/Images/profiles/@Model.ProfilePicture" alt="Image Preview" style=" max-width: 300px; max-height: 300px;">
+                </div>
+                <div class="mb-3">
+                    <label for="ProfilePicture" class="form-label">Profile Picture</label>
+                    <input type="file" accept="image/*" class="form-control" name="file" id="ProfilePicture" placeholder="ProfilePicture" onchange="previewImage(event)">
+                </div>
+        </div>
+
+		</div>
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <button type="submit" style="width:90%" class="btn btn-primary">Save Changes</button>
+                    <br />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <a href="/Identity/Account/ChangePassword" style="width:90%" class="btn btn-secondary">Change Password</a>
+                    <br />
+                </div>
+            </div>
+        </div>
+        
+
+	</form>
+</div>
+
+
+
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('preview');
+            output.src = reader.result;
+            output.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

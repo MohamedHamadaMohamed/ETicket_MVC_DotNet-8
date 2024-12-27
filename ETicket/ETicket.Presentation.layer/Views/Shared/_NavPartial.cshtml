@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> _userManager
+@{
+    var user = await _userManager.GetUserAsync(User);
+}
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <div class="container-fluid">
+        <!-- Logo -->
+        <a class="navbar-brand" href="#">
+            <img src="~/Files/Images/logo.png" alt="Logo" width="150px" style="margin-right: 20px" class="d-inline-block align-text-top">
+        </a>
+        <!-- Navbar Brand -->
+        <a class="navbar-brand" href="/Home/Home/Index">Moive Point</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link " href="/Home/Home/Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Customer/category/Index">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Customer/Cinema/Index">Cinemas</a>
+                </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">management System</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/Admin/Actor/Index">Actors</a>
+                        <a class="dropdown-item" href="/Admin/category/Index">Categories</a>
+                        <a class="dropdown-item" href="/Admin/Cinema/Index">Cinemas</a>
+                        <a class="dropdown-item" href="/Admin/Movie/Index">Movies</a>
+                        <a class="dropdown-item" href="/Admin/RequestCinema/Index">Request Cinema</a>
+                        <a class="dropdown-item" href="/Identity/User/Index">Users</a>
+                        <a class="dropdown-item" href="/Identity/Role/Index">Roles</a>
+
+                        </div>
+                    </li>
+                }
+                <li class="nav-item">
+                    <a class="nav-link" href="/Admin/Cart/Index"><i class="bi bi-cart3" style="color: white;"></i></a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+
+                        <img src="~/Files/Images/profiles/@user.ProfilePicture" style="width:40px;height40px;border-radius:50%" alt="Alternate Text" />
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Profile">Welcome @User.Identity.Name</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Logout">Logout</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Register">Register</a>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</nav>
