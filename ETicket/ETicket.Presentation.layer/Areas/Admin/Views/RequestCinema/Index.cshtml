@@ -56,7 +56,7 @@
                 @Html.DisplayFor(modelItem => item.Details)
             </td>
             <td>
-                    <a href="/RequestCinema/Accept?RequestId=@item.Id" class="btn btn-warning" id="@item.Id">pending</a>
+                    <a href="/Admin/RequestCinema/Accept?RequestId=@item.Id" class="btn btn-warning" id="@item.Id">pending</a>
                     <script>
                         document.getElementById(@item.Id).addEventListener('click', function () {
                             this.style.backgroundColor = 'green';
@@ -65,7 +65,7 @@
                             this.disabled = true;
                         });
                     </script>
-                    <a href="/RequestCinema/Reject?RequestId=@item.Id" class="btn btn-danger">reject</a>
+                    <a href="/Admin/RequestCinema/Reject?RequestId=@item.Id" class="btn btn-danger">reject</a>
 
             </td>
         </tr>

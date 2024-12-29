@@ -30,7 +30,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
            await _requestCinemaRepository.CreateAsync(requestCinema);
             TempData["Success"] = "The request has been added successfully, please wait 3 days";
-            return RedirectToAction(nameof(Index), "Home");
+            return RedirectToAction(nameof(Index), "Home",new {area="Home"});
         }
 
         public async Task<IActionResult> Accept(int RequestId)

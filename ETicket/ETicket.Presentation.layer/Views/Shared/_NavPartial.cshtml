@@ -55,7 +55,7 @@
                         <img src="~/Files/Images/profiles/@user.ProfilePicture" style="width:40px;height40px;border-radius:50%" alt="Alternate Text" />
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Profile">Welcome @User.Identity.Name</a>
+                        <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Profile">Welcome @user.FirstName @user.LastName</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white" asp-area="Identity" asp-controller="Account" asp-action="Logout">Logout</a>
