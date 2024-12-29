@@ -34,7 +34,7 @@ namespace ETicket.Presentation.layer
 
             builder.Services.AddScoped<IRequestCinemaRepository, RequestCinemaRepository>();
 
-            // builder.Services.AddTransient<IEmailSender, EmailSender>();
+             builder.Services.AddTransient<IEmailSender, EmailSender>();
            // builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 

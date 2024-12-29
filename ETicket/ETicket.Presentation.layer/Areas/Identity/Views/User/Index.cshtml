@@ -40,8 +40,8 @@
 			<th scope="col" class="border border-dark">Region</th>
 			<th scope="col" class="border border-dark">Street</th>*@
 			<th scope="col" class="border border-dark">Profile Picture</th>
-            @*<th scope="col" class="border border-dark">Is Agree</th>*@
-			<th scope="col" class="border border-dark">Lockout End</th>
+            @*<th scope="col" class="border border-dark">Is Agree</th>
+			<th scope="col" class="border border-dark">Lockout End</th>*@
 			<th scope="col" class="border border-dark">Lockout Enabled</th>
             @*<th scope="col" class="border border-dark">Access Failed Count </th>*@
 			<th scope="col" class="border border-dark">Role</th>
@@ -67,9 +67,20 @@
                 <th scope="row" class="border border-dark">
                     <img src="~/Files/Images/profiles/@item.ProfilePicture" width="50px"/>
                 </th>
-                @* <th scope="row" class="border border-dark">@item.IsAgree</th>*@
-                <th scope="row" class="border border-dark">@item.LockoutEnd</th>
-                <th scope="row" class="border border-dark">@item.LockoutEnabled</th>
+                @* <th scope="row" class="border border-dark">@item.IsAgree</th>
+			<th scope="row" class="border border-dark">@item.LockoutEnd</th>*@
+                <th scope="row" class="border border-dark">
+                    @if( item.LockoutEnabled)
+                    {
+                        <a href="/Identity/Account/Lock?UserId=@item.Id" class="btn btn-primary" >Lock</a>
+                    }
+                    else
+                    {
+                        <a href="/Identity/Account/UnLock?UserId=@item.Id" class="btn btn-danger">Unlock</a>
+
+                    }
+
+                </th>
                 @*<th scope="row" class="border border-dark">@item.AccessFailedCount</th>*@
                 <th scope="row" class="border border-dark">
                 <a href="/Identity/User/RoleManagement?UserId=@item.Id" class="btn btn-primary " style="width:130px">Manage Role</a> 

@@ -69,14 +69,16 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                 PaymentMethodTypes = new List<string> { "card" },
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment",
-                SuccessUrl = $"{Request.Scheme}://{Request.Host}/Checkout/Success",
-                CancelUrl = $"{Request.Scheme}://{Request.Host}/Checkout/Cancel",
+                SuccessUrl = $"{Request.Scheme}://{Request.Host}/Admin/Checkout/Success",
+                CancelUrl = $"{Request.Scheme}://{Request.Host}/Admin/Checkout/Cancel",
             };
 
             var carts = _cartRepository.Get(includeProps: [e => e.Movie]
                 , filter: e => e.ApplicationUserId == _userManager.GetUserId(User)).ToList();
 
-            foreach(var  item in carts)
+            
+
+			foreach (var  item in carts)
             {
                 options.LineItems.Add(
                     new SessionLineItemOptions

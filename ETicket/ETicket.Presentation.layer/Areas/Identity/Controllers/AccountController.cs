@@ -5,6 +5,9 @@ using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels;
 using Mono.TextTemplating;
 using System.IO;
 using ETicket.Utility.Utilities;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels.ViewAccountModel;
 
 namespace ETicket.Presentation.layer.Areas.Identity.Controllers
 {
@@ -14,11 +17,13 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+        private readonly IEmailSender _emailSender;
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._roleManager = roleManager;
+            this._emailSender = emailSender;
         }
         public IActionResult Register()
         {
@@ -181,10 +186,9 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
                 if (user != null)
                 {
                     var result = _userManager.ChangePasswordAsync(user, changePasswordVM.OldPassword, changePasswordVM.NewPassword);
-                    if(result.IsCompletedSuccessfully)
-                    {
-						return RedirectToAction("Profile", "Account", new { area = "Identity" });
-					}
+                    
+					return RedirectToAction("Profile", "Account", new { area = "Identity" });
+					
 				}
                 else
                 {
@@ -199,22 +203,20 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
             return View(new ForgetPasswordVM());
         }
         [HttpPost]
-		public IActionResult ForgetPassword(ForgetPasswordVM forgetPasswordVM )
+		public async Task< IActionResult> ForgetPassword(ForgetPasswordVM forgetPasswordVM )
 		{
             if (ModelState.IsValid)
             {
-                var user = _userManager.FindByEmailAsync(forgetPasswordVM.Email);
+                var user =await _userManager.FindByEmailAsync(forgetPasswordVM.Email);
                 if (user != null)
                 {
-                    Email email = new Email()
-                    {
-                        To = forgetPasswordVM.Email,
-                        Subject = "Reset Password",
-                        Body = ""
-
-
-
-                    };
+                    var token =await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var ResetPasswordLink = Url.Action("ResetPassword","Account",new {email=user.Email,Token=token},Request.Scheme);
+                   await _emailSender.SendEmailAsync(
+						email: forgetPasswordVM.Email,
+                        subject: "Reset Password",
+						 message: ResetPasswordLink);
+                        return RedirectToAction(nameof(CkeckYourMail));
                          
 
 				}
@@ -226,5 +228,67 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
 
 			return View(forgetPasswordVM);
 		}
-	}
+	    public IActionResult CkeckYourMail()
+        {
+            return View();
+        }
+
+        public IActionResult ResetPassword(string email ,string token)
+        {
+            ResetPasswordVM resetPasswordVM = new ResetPasswordVM()
+            {
+                Email = email,
+                Token = token
+            };
+            
+            return View(resetPasswordVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                var user = await _userManager.FindByEmailAsync(resetPasswordVM.Email);
+                if (user != null)
+                {
+                  var result =  await _userManager.ResetPasswordAsync(user, resetPasswordVM.Token, resetPasswordVM.NewPassword);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction(nameof(Login));
+                    }
+                    else
+                    {
+                        foreach(var error in  result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty,error.Description);
+
+                        }
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "email is not exists ");
+                }
+            }
+            return View(resetPasswordVM);
+
+        }
+        public async Task< IActionResult> Lock(string UserId)
+        {
+             var user =await _userManager.FindByIdAsync(UserId);
+             user.LockoutEnabled = false;
+            await _userManager.UpdateAsync(user);
+            
+            return RedirectToAction("Index","User",new {area="Identity"});
+        }
+        public async Task<IActionResult> UnLock(string UserId)
+        {
+            var user =await _userManager.FindByIdAsync(UserId);
+            user.LockoutEnabled = true;
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToAction("Index", "User", new { area = "Identity" });
+        }
+    }
 }
