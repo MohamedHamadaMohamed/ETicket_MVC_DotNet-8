@@ -8,17 +8,15 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     [Area(nameof(Admin))]
     public class CategoryController : Controller
     {
-        private ICategoryRepository _categoryRepository;
-        private IMovieRepository _movieRepository;
-        public CategoryController(ICategoryRepository categoryRepository, IMovieRepository movieRepository)
+        private IUnitOfWork _unitOfWork;
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this._categoryRepository = categoryRepository;
-            this._movieRepository = movieRepository;
+            this._unitOfWork = unitOfWork;
         }
         public IActionResult Index(string? query = null, int PageNumber = 1)
         {
             CategoriesVM categoriesVM = new CategoriesVM();
-            var categories = _categoryRepository.Get(includeProps: [e => e.Movies]);
+            var categories = _unitOfWork.categoryRepository.Get(includeProps: [e => e.Movies]);
 
 
             if (query != null)
@@ -41,7 +39,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
         public IActionResult Details(int CategoryId)
         {
-            var movies = _movieRepository.Get(filter: e => e.CategoryId == CategoryId, includeProps: [e => e.Category, e => e.Cinema]).ToList();
+            var movies = _unitOfWork.movieRepository.Get(filter: e => e.CategoryId == CategoryId, includeProps: [e => e.Category, e => e.Cinema]).ToList();
             return View(movies);
         }
         public IActionResult Create()
@@ -54,7 +52,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             ModelState.Remove("Movies");
             if (ModelState.IsValid)
             {
-               await _categoryRepository.CreateAsync(category);
+               await _unitOfWork.categoryRepository.CreateAsync(category);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -62,7 +60,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Edit(int CategoryId)
         {
-            var category = _categoryRepository.GetOne(filter: e => e.Id == CategoryId); //dbCotext.Catrgories.Find(CategoryId);
+            var category = _unitOfWork.categoryRepository.GetOne(filter: e => e.Id == CategoryId); //dbCotext.Catrgories.Find(CategoryId);
             return View(category);
         }
         [HttpPost]
@@ -72,7 +70,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _categoryRepository.Update(category);
+                _unitOfWork.categoryRepository.Update(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -80,10 +78,10 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Delete(int CategoryId)
         {
-            var category = _categoryRepository.GetOne(filter: e => e.Id == CategoryId) as Category;
+            var category = _unitOfWork.categoryRepository.GetOne(filter: e => e.Id == CategoryId) as Category;
             if (category != null)
             {
-                _categoryRepository.Delete(category);
+                _unitOfWork.categoryRepository.Delete(category);
             }
             return RedirectToAction(nameof(Index));
         }

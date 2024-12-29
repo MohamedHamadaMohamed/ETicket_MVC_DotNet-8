@@ -8,16 +8,17 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     [Area(nameof(Admin))]
     public class ActorController : Controller
     {
-        private IActorRepository _actorRepository;
-        public ActorController(IActorRepository actorRepository)
+       // private IActorRepository _actorRepository;
+        private IUnitOfWork _unitOfWork;
+        public ActorController(IUnitOfWork unitOfWork)
         {
-            this._actorRepository = actorRepository;
+            this._unitOfWork = unitOfWork;
         }
 
         public IActionResult Index(string? query = null, int PageNumber = 1)
         {
             ActorsVM actorsVM = new ActorsVM();
-            var actors = _actorRepository.Get();
+            var actors = _unitOfWork.actorRepository.Get();
             if(query != null)
             {
                 query = query.Trim();
@@ -34,7 +35,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Details(int ActorId)
         {
-            var actor = _actorRepository.GetOne(filter: e => e.Id == ActorId) as Actor;
+            var actor = _unitOfWork.actorRepository.GetOne(filter: e => e.Id == ActorId) as Actor;
             return View(actor);
         }
         public IActionResult Create()
@@ -56,14 +57,14 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                     actor.ProfilePicture = Utility.Utilities.Utility.UploadFile(file, "cast"); ;
                 }
 
-               await _actorRepository.CreateAsync(actor);
+               await _unitOfWork.actorRepository.CreateAsync(actor);
                 return RedirectToAction(nameof(Index));
             }
             return View(actor);
         }
         public IActionResult Edit(int ActorId)
         {
-            var actor = _actorRepository.GetOne(filter: e => e.Id == ActorId) as Actor;
+            var actor = _unitOfWork.actorRepository.GetOne(filter: e => e.Id == ActorId) as Actor;
             return View(actor);
         }
         [HttpPost]
@@ -74,7 +75,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             ModelState.Remove("ActorMovies");
             if (ModelState.IsValid)
             {
-                var oldActor = _actorRepository.GetOne(filter: e => e.Id == actor.Id, trancked: false);
+                var oldActor = _unitOfWork.actorRepository.GetOne(filter: e => e.Id == actor.Id, trancked: false);
                 if (file != null && file.Length > 0)
                 {
                     actor.ProfilePicture = Utility.Utilities.Utility.UploadFile(file, "cast"); ;
@@ -87,7 +88,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                 }
 
 
-                _actorRepository.Update(actor);
+                _unitOfWork.actorRepository.Update(actor);
                 return RedirectToAction(nameof(Index));
             }
             return View(actor);
@@ -95,7 +96,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
         public IActionResult Delete(int ActorId)
         {
-            var actor = _actorRepository.GetOne(filter: e => e.Id == ActorId);
+            var actor = _unitOfWork.actorRepository.GetOne(filter: e => e.Id == ActorId);
 
             Utility.Utilities.Utility.DeleteFile(actor.ProfilePicture, "cast");
 
@@ -103,7 +104,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
             if (actor != null)
             {
-                _actorRepository.Delete(actor);
+                _unitOfWork.actorRepository.Delete(actor);
             }
             return RedirectToAction(nameof(Index));
 

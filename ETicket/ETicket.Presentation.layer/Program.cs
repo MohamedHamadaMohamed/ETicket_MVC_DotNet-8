@@ -31,10 +31,11 @@ namespace ETicket.Presentation.layer
             builder.Services.AddScoped<IActorRepository, ActorRepository>();
             builder.Services.AddScoped<IActorMovieRepository, ActorMovieRepository>();
             builder.Services.AddScoped<IRequestCinemaRepository, RequestCinemaRepository>();
-
             builder.Services.AddScoped<IRequestCinemaRepository, RequestCinemaRepository>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-             builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
            // builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 

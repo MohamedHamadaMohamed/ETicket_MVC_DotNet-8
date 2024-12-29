@@ -8,16 +8,15 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     [Area(nameof(Admin))]
     public class CinemaController : Controller
     {
-        private ICinemaRepository _cinemaRepository;
-        private IMovieRepository _movieRepository;
-        public CinemaController(ICinemaRepository cinemaRepository, IMovieRepository movieRepository)
+        
+        private IUnitOfWork _unitOfWork;
+        public CinemaController(IUnitOfWork unitOfWork)
         {
-            this._cinemaRepository = cinemaRepository;
-            this._movieRepository = movieRepository;
+            this._unitOfWork = unitOfWork;
         }
         public IActionResult Index(string? query = null, int PageNumber = 1)
         {
-            var cinemas = _cinemaRepository.Get(includeProps: [e => e.Movies]);
+            var cinemas = _unitOfWork.cinemaRepository.Get(includeProps: [e => e.Movies]);
             cinemasVM cinemasVM = new cinemasVM();
 
             if (query != null)
@@ -44,7 +43,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         {
 
             //var movies = _dbContext.Movies.Where(e => e.CinemaId == CinemaId).Include(e => e.Category).Include(e => e.Cinema).ToList();
-            var movies = _movieRepository.Get(filter: e => e.CinemaId == CinemaId, includeProps: [e => e.Category, e => e.Cinema]).ToList();
+            var movies = _unitOfWork.movieRepository.Get(filter: e => e.CinemaId == CinemaId, includeProps: [e => e.Category, e => e.Cinema]).ToList();
             return View(movies);
         }
         public IActionResult Create()
@@ -58,7 +57,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             ModelState.Remove("Movies");
             if (ModelState.IsValid)
             {
-                await _cinemaRepository.CreateAsync(cinema);
+                await _unitOfWork.cinemaRepository.CreateAsync(cinema);
                 return RedirectToAction(nameof(Index));
             }
             return View(cinema);
@@ -66,7 +65,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         public IActionResult Edit(int CinemaId)
         {
 
-            var cinema = _cinemaRepository.GetOne(filter: e => e.Id == CinemaId) as Cinema;
+            var cinema = _unitOfWork.cinemaRepository.GetOne(filter: e => e.Id == CinemaId) as Cinema;
             return View(cinema);
         }
         [HttpPost]
@@ -76,17 +75,17 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                _cinemaRepository.Update(cinema);
+                _unitOfWork.cinemaRepository.Update(cinema);
                 return RedirectToAction(nameof(Index));
             }
             return View(cinema);
         }
         public IActionResult Delete(int CinemaId)
         {
-            var cinema = _cinemaRepository.GetOne(filter: e => e.Id == CinemaId) as Cinema;
+            var cinema = _unitOfWork.cinemaRepository.GetOne(filter: e => e.Id == CinemaId) as Cinema;
             if (cinema != null)
             {
-                _cinemaRepository.Delete(cinema);
+                _unitOfWork.cinemaRepository.Delete(cinema);
             }
             return RedirectToAction(nameof(Index));
         }

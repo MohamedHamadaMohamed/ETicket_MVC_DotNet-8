@@ -11,17 +11,17 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     [Area(nameof(Admin))]
     public class CartController : Controller
     {
-        ICartRepository _cartRepository;
+        IUnitOfWork _unitOfWork;
         UserManager<ApplicationUser> _userManager;
-        public CartController(ICartRepository cartRepository, UserManager<ApplicationUser> userManager)
+        public CartController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
-            this._cartRepository = cartRepository;
+            this._unitOfWork = unitOfWork;
             this._userManager = userManager;
         }
         public IActionResult Index()
         {
 
-            var carts = _cartRepository.Get(includeProps: [e => e.Movie]
+            var carts = _unitOfWork.cartRepository.Get(includeProps: [e => e.Movie]
                 ,filter: e=>e.ApplicationUserId == _userManager.GetUserId(User)).ToList();
             CartWithTotalPriceVM cartWithTotalPriceVM = new CartWithTotalPriceVM()
             {
@@ -41,10 +41,10 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                     return RedirectToAction("Login", "Account");
 
                 }
-                var CardTemp = _cartRepository.GetOne(filter: e => (e.MovieId == MovieId && e.ApplicationUserId == userId));
+                var CardTemp = _unitOfWork.cartRepository.GetOne(filter: e => (e.MovieId == MovieId && e.ApplicationUserId == userId));
                 if (CardTemp is null)
                 {
-                    _cartRepository.CreateAsync(new()
+                    _unitOfWork.cartRepository.CreateAsync(new()
                     {
                         ApplicationUserId = userId,
                         MovieId = MovieId,
@@ -54,7 +54,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                 else
                 {
                     CardTemp.Count = CardTemp.Count+count;
-                    _cartRepository.Update(CardTemp);
+                    _unitOfWork.cartRepository.Update(CardTemp);
                     
                 }
 
@@ -73,7 +73,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                 CancelUrl = $"{Request.Scheme}://{Request.Host}/Admin/Checkout/Cancel",
             };
 
-            var carts = _cartRepository.Get(includeProps: [e => e.Movie]
+            var carts = _unitOfWork.cartRepository.Get(includeProps: [e => e.Movie]
                 , filter: e => e.ApplicationUserId == _userManager.GetUserId(User)).ToList();
 
             
@@ -110,11 +110,11 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
-            var cart = _cartRepository.GetOne(filter:e=>((e.ApplicationUserId == userId)&& (e.MovieId == MovieId ) ));
+            var cart = _unitOfWork.cartRepository.GetOne(filter:e=>((e.ApplicationUserId == userId)&& (e.MovieId == MovieId ) ));
             if (cart != null)
             {
                 cart.Count++;
-                _cartRepository.Update(cart);
+                _unitOfWork.cartRepository.Update(cart);
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Login", "Account", new { area = "Identity" });
@@ -127,12 +127,12 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
-            var cart = _cartRepository.GetOne(filter: e => e.MovieId == MovieId && e.ApplicationUserId == userId) as Cart;
+            var cart = _unitOfWork.cartRepository.GetOne(filter: e => e.MovieId == MovieId && e.ApplicationUserId == userId) as Cart;
             if (cart != null)
             {
                 cart.Count--;
             if (cart.Count < 0) { cart.Count = 0; }
-            _cartRepository.Update(cart);
+                _unitOfWork.cartRepository.Update(cart);
             return RedirectToAction("Index");
             }
             return RedirectToAction("Login", "Account", new { area = "Identity" });
@@ -147,10 +147,10 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Account", new { area = "Identity" });
             }
-            var cart = _cartRepository.GetOne(filter: e => e.MovieId == MovieId && e.ApplicationUserId == userId) as Cart;
+            var cart = _unitOfWork.cartRepository.GetOne(filter: e => e.MovieId == MovieId && e.ApplicationUserId == userId) as Cart;
             if (cart != null)
             {
-                _cartRepository.Delete(cart);
+                _unitOfWork.cartRepository.Delete(cart);
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Login", "Account", new { area = "Identity" });

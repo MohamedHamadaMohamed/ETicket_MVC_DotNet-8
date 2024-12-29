@@ -9,24 +9,18 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     [Area(nameof(Admin))]
     public class MovieController : Controller
     {
-        private IMovieRepository _movieRepository;
-        private ICategoryRepository _categoryRepository;
-        private ICinemaRepository _cinemaRepository;
-        private IActorRepository _actorRepository;
-        private IActorMovieRepository _actorMovieRepository;
 
-        public MovieController(IMovieRepository movieRepository, ICategoryRepository categoryRepository, ICinemaRepository cinemaRepository, IActorRepository actorRepository, IActorMovieRepository actorMovieRepository)
+        private IUnitOfWork _unitOfWork;
+
+        public MovieController(IUnitOfWork unitOfWork)
         {
-            this._movieRepository = movieRepository;
-            this._categoryRepository = categoryRepository;
-            this._cinemaRepository = cinemaRepository;
-            this._actorRepository = actorRepository;
-            this._actorMovieRepository = actorMovieRepository;
+            this._unitOfWork = unitOfWork;
+           
         }
         public IActionResult Index(string? query = null, int PageNumber = 1)
         {
 
-            var movies = _movieRepository.Get(includeProps: [e => e.Cinema, e => e.Category]);
+            var movies = _unitOfWork.movieRepository.Get(includeProps: [e => e.Cinema, e => e.Category]);
             if (query != null)
             {
                 query = query.Trim();
@@ -40,7 +34,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Details(int movieId)
         {
-            Movie? movie = _movieRepository.Get(filter: e => e.Id == movieId, includeProps: [e => e.Category, e => e.Cinema]).Include(m => m.ActorMovies).ThenInclude(ma => ma.Actors).FirstOrDefault() as Movie;
+            Movie? movie = _unitOfWork.movieRepository.Get(filter: e => e.Id == movieId, includeProps: [e => e.Category, e => e.Cinema]).Include(m => m.ActorMovies).ThenInclude(ma => ma.Actors).FirstOrDefault() as Movie;
 
             var actors = movie.ActorMovies.Select(ma => ma.Actors).ToList();
 
@@ -48,7 +42,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             if (movie != null)
             {
                 (movie.views)++;
-                _movieRepository.Update(movie);
+                _unitOfWork.movieRepository.Update(movie);
                 return View(movie);
             }
             return NotFound();
@@ -61,9 +55,9 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Create()
         {
-            var categories = _categoryRepository.Get().ToList();
-            var cinemas = _cinemaRepository.Get().ToList();
-            var actors = _actorRepository.Get().ToList();
+            var categories = _unitOfWork.categoryRepository.Get().ToList();
+            var cinemas = _unitOfWork.cinemaRepository.Get().ToList();
+            var actors = _unitOfWork.actorRepository.Get().ToList();
             ViewBag.categories = categories;
             ViewBag.cinemas = cinemas;
             ViewBag.actors = actors;
@@ -89,10 +83,10 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                     movie.ImgUrl = Utility.Utilities.Utility.UploadFile(file, "movies");
                 }
 
-               await _movieRepository.CreateAsync(movie);
+               await _unitOfWork.movieRepository.CreateAsync(movie);
                 foreach (var item in ActorsId)
                 {
-                  await  _actorMovieRepository.CreateAsync(new ActorMovie { ActorsId = item, MoviesId = movie.Id });
+                  await  _unitOfWork.actorMovieRepository.CreateAsync(new ActorMovie { ActorsId = item, MoviesId = movie.Id });
 
                 }
                 return RedirectToAction(nameof(Index));
@@ -101,13 +95,13 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
         }
         public IActionResult Edit(int MovieId)
         {
-            var categories = _categoryRepository.Get().ToList();
-            var cinemas = _cinemaRepository.Get().ToList();
-            var actors = _actorRepository.Get().ToList();
+            var categories = _unitOfWork.categoryRepository.Get().ToList();
+            var cinemas = _unitOfWork.cinemaRepository.Get().ToList();
+            var actors = _unitOfWork.actorRepository.Get().ToList();
             ViewBag.categories = categories;
             ViewBag.cinemas = cinemas;
             ViewBag.actors = actors;
-            var movie = _movieRepository.GetOne(filter: e => e.Id == MovieId);
+            var movie = _unitOfWork.movieRepository.GetOne(filter: e => e.Id == MovieId);
             return View(movie);
         }
         [HttpPost]
@@ -120,7 +114,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
             ModelState.Remove("ActorMovies");
             if (ModelState.IsValid)
             {
-                var oldMovie = _movieRepository.GetOne(filter: e => e.Id == movie.Id, trancked: false);
+                var oldMovie = _unitOfWork.movieRepository.GetOne(filter: e => e.Id == movie.Id, trancked: false);
                 if (file != null && file.Length > 0)
                 {
                     
@@ -135,14 +129,14 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
                 }
 
 
-                _movieRepository.Update(movie);
+                _unitOfWork.movieRepository.Update(movie);
                 return RedirectToAction(nameof(Index));
             }
             return View(movie);
         }
         public ActionResult Delete(int MovieId)
         {
-            var movie = _movieRepository.GetOne(filter: e => e.Id == MovieId);
+            var movie = _unitOfWork.movieRepository.GetOne(filter: e => e.Id == MovieId);
 
 
             Utility.Utilities.Utility.DeleteFile(movie.ImgUrl, "movies");
@@ -150,7 +144,7 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
 
             if (movie != null)
             {
-                _movieRepository.Delete(movie);
+                _unitOfWork.movieRepository.Delete(movie);
             }
             return RedirectToAction(nameof(Index));
         }

@@ -11,11 +11,12 @@ namespace ETicket.Presentation.layer.Areas.Admin.Controllers
     {
         private readonly IEmailSender _emailSender;
 		private readonly IMovieRepository _movieRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-		public CheckoutController(IEmailSender emailSender , IMovieRepository movieRepository)
+		public CheckoutController(IEmailSender emailSender, IUnitOfWork unitOfWork)
         {
             _emailSender = emailSender;
-            _movieRepository = movieRepository;
+            _unitOfWork = unitOfWork;
         }
         public IActionResult Cancel()
         {
