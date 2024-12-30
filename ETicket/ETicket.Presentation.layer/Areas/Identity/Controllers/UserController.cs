@@ -1,4 +1,5 @@
-﻿using ETicket.Data.Acess.layer.Models;
+﻿using AutoMapper;
+using ETicket.Data.Acess.layer.Models;
 using ETicket.Presentation.layer.Areas.Admin.Models.ViewModels;
 using ETicket.Presentation.layer.Areas.Identity.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -11,16 +12,21 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
 	{
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
 
-        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public UserController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _mapper = mapper;   
+
+            
         }
         public IActionResult Index(string? query = null, int PageNumber = 1)
 		{
             ApplicationUsersVM applicationUsersVM = new ApplicationUsersVM();
-            var users = _userManager.Users.Select(
+            var appUsers = _userManager.Users;
+            /*var users = _userManager.Users.Select(
                 e=> new ApplicationUserVM()
                 {
                     Id = e.Id,
@@ -35,24 +41,30 @@ namespace ETicket.Presentation.layer.Areas.Identity.Controllers
                     City = e.City,
                     Region = e.Region,
                     Street = e.Street,
-                    ProfilePicture = e.ProfilePicture?? "Profile.png",
+                    ProfilePicture = e.ProfilePicture,
                     IsAgree = e.IsAgree,
                     LockoutEnd = e.LockoutEnd,
                     LockoutEnabled = e.LockoutEnabled,
                     AccessFailedCount = e.AccessFailedCount,
 
-                });
+                });*/
+            
             if (query != null)
             {
                 query = query.Trim();
-                users = users.Where(e => e.FirstName.Contains(query));
+                appUsers = appUsers.Where(e => e.FirstName.Contains(query));
             }
 
 
-            applicationUsersVM.TotalUserCount = (users.Count() + 4) / 5;
+            applicationUsersVM.TotalUserCount = (appUsers.Count() + 4) / 5;
             if (PageNumber < 1) PageNumber = 1;
-            users = users.Skip((PageNumber - 1) * 5).Take(5);
+            appUsers = appUsers.Skip((PageNumber - 1) * 5).Take(5);
             applicationUsersVM.CurrentPageIndex = PageNumber;
+            List<ApplicationUserVM> users = new List<ApplicationUserVM>();
+            foreach (var item in appUsers)
+            {
+                users.Add(_mapper.Map<ApplicationUser, ApplicationUserVM>(item));
+            }
             applicationUsersVM.users = users.ToList();
 
             return View(applicationUsersVM);

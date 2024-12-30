@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Stripe;
 using ETicket.Utility.Utilities;
+using ETicket.Presentation.layer.Mapping;
 
 namespace ETicket.Presentation.layer
 {
@@ -46,6 +47,7 @@ namespace ETicket.Presentation.layer
             builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
             StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
+            builder.Services.AddAutoMapper(e=>e.AddProfile(new MappingProfile()));
 
             var app = builder.Build();
 
